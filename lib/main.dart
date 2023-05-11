@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flames/findFlames.dart';
-void main() => runApp(Home());
+void main() => runApp(const MaterialApp(home: Home()));
 
 
 class Home extends StatefulWidget {
@@ -12,15 +12,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
 
-  final boyname = TextEditingController();
-  final girlname = TextEditingController();
+  final boyName = TextEditingController();
+  final girlName = TextEditingController();
 
-  String flames = '';
+  String relate = '';
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Flames',
           style: TextStyle(
@@ -39,13 +38,13 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               TextField(
-                controller: boyname,
+                controller: boyName,
                 decoration: InputDecoration(
                   hintText: 'Enter boy name',
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                       onPressed: (){
-                        boyname.clear();
+                        boyName.clear();
                       },
                       icon: const Icon(Icons.clear_sharp)),
                   suffixIconColor: Colors.black45
@@ -53,13 +52,13 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 20.0,),
               TextField(
-                controller: girlname,
+                controller: girlName,
                 decoration: InputDecoration(
                     hintText: 'Enter girl name',
                     border: const OutlineInputBorder(),
                     suffixIcon: IconButton(
                         onPressed: (){
-                          girlname.clear();
+                          girlName.clear();
                         },
                         icon: const Icon(Icons.clear_sharp)),
                     suffixIconColor: Colors.black45
@@ -69,10 +68,62 @@ class _HomeState extends State<Home> {
               MaterialButton(
                 color: Colors.pink[400],
                 onPressed: (){
-                  setState(() {
-                    FindFlames(boyname: boyname, girlname: girlname);
-                    flames = 'Vaipilla Raja';
-                  });
+                    if(boyName.text.isEmpty || girlName.text.isEmpty)
+                      {
+                        print('ok');
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('enter all fields'),
+                            ));
+                      }
+                    else
+                      {
+                        Flames flames = Flames(boyname: boyName, girlname: girlName);
+                        relate = flames.findFlames();
+                        boyName.clear();
+                        girlName.clear();
+                        if(relate == 'F')
+                          {
+                            setState(() {
+                              relate = 'Friend';
+                            });
+                          }
+                        else if(relate == 'L')
+                          {
+                            setState(() {
+                              relate = 'LOVER';
+                            });
+                          }
+                        else if(relate == 'A')
+                          {
+                            setState(() {
+                              relate = 'AFFECTION';
+                            });
+                          }
+                        else if(relate == 'M')
+                          {
+                            setState(() {
+                              relate = 'MARRY';
+                            });
+                          }
+                        else if(relate == 'E')
+                          {
+                            setState(() {
+                              relate = 'ENEMY';
+                            });
+                          }
+                        else if(relate == 'S')
+                          {
+                            setState(() {
+                              relate = 'SISTER';
+                            });
+                          }
+                        else
+                        {
+                        setState(() {
+                        });
+                        }
+
+                      }
                 },
                 textColor: Colors.white,
                 elevation: 5.0,
@@ -80,10 +131,10 @@ class _HomeState extends State<Home> {
               ),
               SizedBox(height: 20.0),
               Center(
-                child: Text(flames,
+                child: Text(relate,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 40.0,
+                    fontSize: 20.0,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -92,7 +143,6 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-      ),
     );
   }
 }
